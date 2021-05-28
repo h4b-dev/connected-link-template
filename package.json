@@ -1,0 +1,21 @@
+{
+  "name": "connected-link-template",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:h4b-dev/connected-link-template.git",
+  "author": "vndre <dev@vndre.io>",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "sucrase": "^3.18.1"
+  },
+  "scripts": {
+    "dev": "nodemon server/index.js",
+    "build": "sucrase ./server -d ./server/dist --transforms imports",
+    "start": "node server/dist/index.js"
+  }
+}
