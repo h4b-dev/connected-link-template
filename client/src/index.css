@@ -1,0 +1,176 @@
+/*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select{margin:0}html{box-sizing:border-box}*,*::before,*::after{box-sizing:inherit}img,video{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0}
+
+/* theme */
+main {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background: #573886;
+  justify-content: center;
+  align-items: center;
+}
+
+#codentainer {
+  background: white;
+  box-shadow: 0 0 #0000,0 0 #0000,0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 5rem 3rem;
+  max-width: 28rem;
+  border-radius: .5rem;
+  display: flex;
+  flex-direction: column;
+  animation: 1s cubic-bezier(0.22,0.61,0.36,1) both fadeInUp;
+  user-select: none;
+}
+
+#codentainer.loading {
+  cursor: wait;
+}
+
+#logo {
+  width: 50px;
+  margin: 0 auto 3rem auto;
+}
+
+#codentainer > h1 {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+#codentainer > h5 {
+  font-weight: normal;
+  font-size: 0.75rem;
+  margin-bottom: 1rem;
+  color: #9CA3AF;
+}
+
+#codentainer > input {
+  border: 1px solid #5A56F1;
+  outline: none;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  transition: all 300ms ease-in-out;
+}
+
+#codentainer > input:active,
+#codentainer > input:focus {
+  border: 1px solid #BDBBF9;
+  color: #9CA3AF;
+}
+
+#codentainer > input::placeholder {
+  color: #9CA3AF;
+}
+
+#codentainer.error > input {
+  border: 1px solid #f25d5d;
+}
+
+#error {
+  font-size: 0.75rem;
+  color: #f79e9e;
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+#codentainer > button {
+  border: none;
+  outline: none;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: white;
+  padding: 1rem;
+  font-weight: bold;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+  transition: all 300ms ease-in-out;
+}
+
+#codentainer > button:not(:disabled) {
+  cursor: pointer;
+  background: #5A56F1;
+}
+
+#codentainer > button:disabled {
+  background: #9CA3AF;
+  cursor: not-allowed;
+}
+
+#codentainer > button:not(:disabled):hover {
+  background: #8C89F5;
+}
+#codentainer > button:not(:disabled):active {
+  background: #363491;
+}
+
+#codentainer.error > button {
+  background: #f25d5d;
+}
+
+#codentainer > a {
+  align-self: center;
+  font-size: 0.75rem;
+  color: #D1D5DB;
+  margin-top: 1rem;
+  transition: all 300ms ease-in-out;
+  cursor: pointer;
+}
+
+#codentainer > a:hover {
+  color: #9CA3AF;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 50%, 0);
+    transform: translate3d(0, 50%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.spinner {
+  margin: 0 auto;
+  width: 70px;
+  text-align: center;
+}
+
+.spinner > div {
+  width: 18px;
+  height: 18px;
+  background-color: #8C89F5;
+
+  border-radius: 100%;
+  display: inline-block;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+
+.spinner .bounce1 {
+  animation-delay: -0.32s;
+}
+
+.spinner .bounce2 {
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes sk-bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bouncedelay {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1.0);
+  }
+}

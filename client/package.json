@@ -1,0 +1,22 @@
+{
+  "name": "h4b-connected-fe-template",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "preact": "^10.5.13"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.14.3",
+    "@preact/preset-vite": "^2.0.0",
+    "eslint": "^7.27.0",
+    "eslint-config-preact": "^1.1.4",
+    "vite": "^2.3.3"
+  },
+  "eslintConfig": {
+    "extends": "preact"
+  }
+}
