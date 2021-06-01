@@ -1,5 +1,8 @@
 {
   "execMap": {
     "js": "sucrase-node"
+  },
+  "events": {
+    "restart": "fuser -k 3001/tcp && nodemon server"
   }
 }

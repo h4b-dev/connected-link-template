@@ -3,17 +3,13 @@ const cors = require('cors')
 
 const app = express()
 const router = express.Router()
-const port = 3000
-
-app
-  .use(express.json())
-  .use(cors())
+const port = 3001
 
 router
-  .get('/', (req, res) => {
+  .get('/getUserAmount', (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     // code key is always required
-    const { code } = req.body
+    const { code } = req.query
     if (!code) {
       throw Error ('a code is required')
     }
@@ -28,6 +24,14 @@ router
 
     res.send(JSON.stringify(response))
   })
+
+app
+  .use(express.json())
+  .use(cors())
+  // the static site to get the user code, we serve it from the 'dist' directory previously built by client.
+  .use(express.static('./dist/public'))
+  .use('/public', express.static('public'))
+  .use(router)
   .listen(port, () => {
     console.log(`H4B-connected-link API listening at http://localhost:${port}`)
   })
