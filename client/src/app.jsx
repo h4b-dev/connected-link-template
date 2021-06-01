@@ -2,29 +2,30 @@ import { useEffect, useState } from 'preact/hooks'
 import { apiStates, useApi } from './hooks/useApi'
 import useFirstRender from './hooks/useFirstRender'
 
-const Loading = () => (
-  <div className="spinner">
-    <div className="bounce1" />
-    <div className="bounce2" />
-    <div className="bounce3" />
-  </div>
-)
+import { LoadingSpinner } from './components'
 
 export function App() {
   const [userValue, setUserValue] = useState('')
+  const [miscError, setMiscError] = useState('')
   const firstRender = useFirstRender()
   const [submit, setSubmit] = useState(false)
   const { data, state, error, doFetch, clearFetch } = useApi('')
 
+  const { VITE_REDIRECT_URL } = import.meta.env
+
+  if (!VITE_REDIRECT_URL) {
+    throw Error('VITE_REDIRECT_URL must be defined in order to redirect.')
+  }
+
   useEffect(() => {
-    if (submit) {
-      doFetch()
-    }
+    if (submit) doFetch()
   }, [submit])
 
   useEffect(() => {
     if (data.ok) {
-      // redirect on ok
+      let amount = '0.00'
+      // if success redirect the user
+      window.location = `${VITE_REDIRECT_URL}?amount=${amount}`
     }
   }, [data])
 
@@ -46,14 +47,14 @@ export function App() {
           onInput={({ target }) => setUserValue(target.value)}
         />
         {
-          error && (
+          (error || miscError) && (
             <p id="error">
-              {error}
+              {error || miscError}
             </p>
           )
         }
         <button disabled={!userValue} onClick={() => setSubmit(true)}>
-          {state === apiStates.LOADING ? <Loading /> : 'continuar'}
+          {state === apiStates.LOADING ? <LoadingSpinner /> : 'continuar'}
         </button>
         <a>¿No tienes un código?</a>
       </div>

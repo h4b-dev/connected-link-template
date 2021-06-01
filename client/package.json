@@ -2,7 +2,7 @@
   "name": "h4b-connected-fe-template",
   "version": "0.0.1",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --clearScreen false",
     "build": "vite build",
     "serve": "vite preview"
   },
