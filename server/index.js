@@ -29,8 +29,7 @@ app
   .use(express.json())
   .use(cors())
   // the static site to get the user code, we serve it from the 'dist' directory previously built by client.
-  .use(express.static('./dist/public'))
-  .use('/public', express.static('public'))
+  .use(express.static(__dirname + '/dist/public'))
   .use(router)
   .listen(port, () => {
     console.log(`H4B-connected-link API listening at http://localhost:${port}`)
