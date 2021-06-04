@@ -7,7 +7,7 @@ const router = express.Router()
 const port = 3001
 
 router
-  .get('/getUserAmount', (req, res, next) => {
+  .get('/getUserAmount', (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     // code key is always required
     const { code } = req.query
