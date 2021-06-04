@@ -1,31 +1,32 @@
-import { useEffect, useState } from 'preact/hooks'
+import { useEffect, useState, useCallback } from 'preact/hooks'
 import { apiStates, useApi } from './hooks/useApi'
 import useFirstRender from './hooks/useFirstRender'
 
 import { LoadingSpinner } from './components'
 
+const { VITE_PAY_URL, VITE_PAY_API_URL, VITE_PERMALINK_CODE, DEV } = import.meta.env
+
+if (!VITE_PAY_URL || !VITE_PAY_API_URL) {
+  throw Error('ENVS must be defined.')
+}
+
+const getUserAmountEndpoint = `${DEV ? 'http://localhost:3001' : ''}/getUserAmount`
+
 export function App() {
   const [userValue, setUserValue] = useState('')
   const [miscError, setMiscError] = useState('')
+  const [storeInfo, setStoreInfo] = useState({
+    color: '#5B1A8A',
+    imageUrl: '/h4b-logo.png',
+    currencyCode: '',
+    name: '',
+  })
   const firstRender = useFirstRender()
-  const [submit, setSubmit] = useState(false)
-  const { data, state, error, doFetch, clearFetch } = useApi('')
-
-  const { VITE_REDIRECT_URL } = import.meta.env
-
-  if (!VITE_REDIRECT_URL) {
-    throw Error('VITE_REDIRECT_URL must be defined in order to redirect.')
-  }
+  const { data, state, error, doFetch, clearFetch } = useApi(getUserAmountEndpoint)
 
   useEffect(() => {
-    if (submit) doFetch()
-  }, [submit])
-
-  useEffect(() => {
-    if (data.ok) {
-      let amount = '0.00'
-      // if success redirect the user
-      window.location = `${VITE_REDIRECT_URL}?amount=${amount}`
+    if (data.amount) {
+      window.location = `${VITE_PAY_URL}/pl/${VITE_PERMALINK_CODE}?amount=${data.amount}&currencyCode=${storeInfo.currencyCode}`
     }
   }, [data])
 
@@ -35,17 +36,52 @@ export function App() {
     }
   }, [firstRender, userValue])
 
+  useEffect(() => {
+    const getLinkInfo = async () => {
+      try {
+        const res = await fetch(`${VITE_PAY_API_URL}/LinkInfo/Permalink?orderCode=${VITE_PERMALINK_CODE}`)
+        const { store } = await res.json()
+        setStoreInfo({
+          imageUrl: store.storeImageUrl,
+          color: store.storeBannerColor,
+          currencyCode: store.config.currencyCode,
+          name: store.name
+        })
+      } catch (err) {
+        throw Error(`Could not fetch store info. ${err}`)
+      }
+    }
+    getLinkInfo()
+  }, [])
+
+  const submitCode = useCallback(
+    () => {
+      if (state !== apiStates.LOADING || state !== apiStates.FETCHING) {
+        doFetch(JSON.stringify({ code: userValue }))
+      }
+    },
+    [state],
+  )
+
   return (
-    <main>
+    <main style={{ color: storeInfo.color }}>
+      <div id="main-bg" />
       <div id="codentainer" className={state.toLowerCase()}>
-        <img alt="logo" id="logo" src="/business-logo.svg" />
-        <h1>Bienvenido a [COMERCIO].</h1>
-        <h5>Por favor ingresa tu código:</h5>
-        <input
-          placeholder="Código"
-          value={userValue}
-          onInput={({ target }) => setUserValue(target.value)}
-        />
+        <div id="logo-container">
+          <img alt="logo" id="logo" src={storeInfo.imageUrl} />
+        </div>
+        <h1>
+          Bienvenido a
+          <b>{storeInfo.name}</b>
+        </h1>
+        <label>
+          <p>Ingresa tu código</p>
+          <input
+            placeholder="Código"
+            value={userValue}
+            onInput={({ target }) => setUserValue(target.value)}
+          />
+        </label>
         {
           (error || miscError) && (
             <p id="error">
@@ -53,8 +89,15 @@ export function App() {
             </p>
           )
         }
-        <button disabled={!userValue} onClick={() => setSubmit(true)}>
-          {state === apiStates.LOADING ? <LoadingSpinner /> : 'continuar'}
+        <button
+          disabled={!userValue}
+          onClick={submitCode}
+          style={{ backgroundColor: storeInfo.color }}
+        >
+          {state === apiStates.LOADING || state === apiStates.FETCHING
+            ? <LoadingSpinner />
+            : 'continuar'
+          }
         </button>
         <a>¿No tienes un código?</a>
       </div>

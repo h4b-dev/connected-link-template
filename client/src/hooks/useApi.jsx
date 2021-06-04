@@ -10,8 +10,9 @@ export const apiStates = {
 
 const initalState = {
   state: apiStates.IDLE,
+  body: '',
   error: '',
-  data: [],
+  data: {},
 }
 
 export const useApi = url => {
@@ -22,15 +23,17 @@ export const useApi = url => {
     [data],
   )
 
-  const doFetch = () => setData((s) => ({...s, state: apiStates.FETCHING}))
+  const doFetch = (body = '') => setData((s) => ({...s, body, state: apiStates.FETCHING}))
 
   const clearFetch = () => setData(initalState)
 
   useEffect(() => {
     if (data.state === apiStates.FETCHING) {
       setPartData({
+        error: '',
         state: apiStates.LOADING,
       })
+
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
@@ -39,10 +42,10 @@ export const useApi = url => {
             data
           })
         })
-        .catch(() => {
+        .catch((err) => {
           setPartData({
             state: apiStates.ERROR,
-            error: 'fetch failed'
+            error: `fetch failed. ${err}`
           })
         })
     }
